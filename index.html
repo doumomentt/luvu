@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Malla Curricular Interactiva - Terapia de Audición, Voz y Lenguaje</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #FFF8E1; /* Amarillo pastel */
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            color: #689F38; /* Verde pastel */
+            text-align: center;
+            margin-bottom: 5px;
+        }
+        .subtitle {
+            color: #81C784;
+            text-align: center;
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+        .summary {
+            background-color: #C8E6C9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background-color: #F1F8E9;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        th, td {
+            border: 1px solid #C8E6C9;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #81C784;
+            color: white;
+            position: sticky;
+            top: 0;
+        }
+        .course {
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .course.completed {
+            background-color: #C8E6C9;
+            text-decoration: line-through;
+            color: #555;
+        }
+        .course.locked {
+            background-color: #FFCDD2;
+            cursor: not-allowed;
+            color: #999;
+        }
+        .course.available {
+            background-color: #B3E5FC;
+        }
+        .cycle-header {
+            background-color: #AED581;
+            color: white;
+            font-weight: bold;
+        }
+        .progress-container {
+            width: 100%;
+            max-width: 600px;
+            margin: 20px auto;
+            text-align: center;
+        }
+        .progress-bar {
+            width: 100%;
+            background-color: #E0E0E0;
+            border-radius: 10px;
+            margin: 10px 0;
+            height: 20px;
+        }
+        .progress {
+            height: 100%;
+            background-color: #81C784;
+            border-radius: 10px;
+            width: 0%;
+            transition: width 0.5s;
+        }
+        .legend {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.9em;
+        }
+        .legend-color {
+            width: 15px;
+            height: 15px;
+            border-radius: 3px;
+        }
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        button {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 20px;
+            background-color: #C8E6C9;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        button:hover {
+            background-color: #81C784;
+            color: white;
+        }
+        .search-container {
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto 20px;
+        }
+        .search-box {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #AED581;
+            border-radius: 20px;
+            font-size: 1em;
+        }
+        @media (max-width: 768px) {
+            th, td {
+                padding: 8px 5px;
+                font-size: 0.9em;
+            }
+            .controls {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Carrera Profesional de Terapia de Audición, Voz y Lenguaje</h1>
+    <p class="subtitle">Modalidad Presencial - Malla Curricular 2025</p>
+    
+    <div class="summary">
+        <p>Total de créditos: 205 | Horas crédito: General (19%) - Específico (41%) - Especialidad (40%)</p>
+    </div>
+    
+    <div class="progress-container">
+        <div id="progress-text">Progreso: 0%</div>
+        <div class="progress-bar">
+            <div class="progress" id="progress"></div>
+        </div>
+    </div>
+    
+    <div class="legend">
+        <div class="legend-item">
+            <div class="legend-color" style="background-color: #C8E6C9;"></div>
+            <span>Completado</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color" style="background-color: #B3E5FC;"></div>
+            <span>Disponible</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color" style="background-color: #FFCDD2;"></div>
+            <span>Bloqueado</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color" style="background-color: #81C784;"></div>
+            <span>Presencial</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color" style="background-color: #5C6BC0;"></div>
+            <span>No presencial</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color" style="background-color: #26A69A;"></div>
+            <span>Semipresencial</span>
+        </div>
+    </div>
+    
+    <div class="search-container">
+        <input type="text" class="search-box" placeholder="Buscar asignatura por nombre o código...">
+    </div>
+    
+    <div class="controls">
+        <button id="btn-show-all">Mostrar todas</button>
+        <button id="btn-show-available">Mostrar disponibles</button>
+        <button id="btn-show-completed">Mostrar completadas</button>
+        <button id="btn-reset">Reiniciar progreso</button>
+    </div>
+    
+    <table id="curriculum">
+        <thead>
+            <tr>
+                <th>Ciclo</th>
+                <th>Código</th>
+                <th>Asignatura</th>
+                <th>Créditos</th>
+                <th>Prerrequisitos</th>
+                <th>Modalidad</th>
+                <th>Tipo</th>
+                <th>Estado</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Primer Ciclo -->
+            <tr class="cycle-header">
+                <td colspan="8">Primer Ciclo - 8 asignaturas | 21 créditos</td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td class="course available" data-code="U0112" data-prereq="">U0112</td>
+                <td class="course available" data-code="U0112" data-prereq="">Técnicas Básicas en Atención de Salud</td>
+                <td>2</td>
+                <td>Ninguno</td>
+                <td>Presencial</td>
+                <td>Específico</td>
+                <td>Disponible</td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td class="course available" data-code="U0002" data-prereq="">U0002</td>
+                <td class="course available" data-code="U0002" data-prereq="">Elementos de Química</td>
+                <td>4</td>
+                <td>Ninguno</td>
+                <td>Presencial</td>
+                <td>General</td>
+                <td>Disponible</td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td class="course available" data-code="U0077" data-prereq="">U0077</td>
+                <td class="course available" data-code="U0077" data-prereq="">Matemáticas Básicas</td>
+                <td>4</td>
+                <td>Ninguno</td>
+                <td>Presencial</td>
+                <td>General</td>
+                <td>Disponible</td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td class="course available" data-code="U0162" data-prereq="">U0162</td>
+                <td class="course available" data-code="U0162" data-prereq="">Introducción a la Terapia de Lenguaje</td>
+                <td>1</td>
+                <td>Ninguno</td>
+                <td>Presencial</td>
+                <td>Específico</td>
+                <td>Disponible</td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td class="course available" data-code="U0684" data-prereq="">U0684</td>
+                <td class="course available" data-code="U0684" data-prereq="">Filosofía y Ética</td>
+                <td>3</td>
+                <td>Ninguno</td>
+                <td>No presencial</td>
+                <td>General</td>
+                <td>Disponible</td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td class="course available" data-code="U0685" data-prereq="">U0685</td>
+                <td class="course available" data-code="U0685" data-prereq="">Desarrollo Personal y Autonomía</td>
+                <td>2</td>
+                <td>Ninguno</td>
+                <td>Semipresencial</td>
+                <td>General</td>
+                <td>Disponible</td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td class="course available" data-code="U0686" data-prereq="">U0686</td>
+                <td class="course available" data-code="U0686" data-prereq="">Comunicación y Redacción I</td>
+                <td>3</td>
+                <td>Ninguno</td>
+                <td>No presencial</td>
+                <td>General</td>
+                <td>Disponible</td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td class="course available" data-code="G0037" data-prereq="">G0037</td>
+                <td class="course available" data-code="G0037" data-prereq="">Inglés 1</td>
+                <td>2</td>
+                <td>Ninguno</td>
+                <td>No presencial</td>
+                <td>General</td>
+                <td>Disponible</td>
+            </tr>
+            
+            <!-- Segundo Ciclo -->
+            <tr class="cycle-header">
+                <td colspan="8">Segundo Ciclo - 8 asignaturas | 23 créditos</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td class="course locked" data-code="U0105" data-prereq="U0002">U0105</td>
+                <td class="course locked" data-code="U0105" data-prereq="U0002">Fundamentos de Química Orgánica</td>
+                <td>4</td>
+                <td>U0002</td>
+                <td>Presencial</td>
+                <td>Específico</td>
+                <td>Bloqueado</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td class="course available" data-code="U0673" data-prereq="">U0673</td>
+                <td class="course available" data-code="U0673" data-prereq="">Biología General</td>
+                <td>4</td>
+                <td>Ninguno</td>
+                <td>Presencial</td>
+                <td>General</td>
+                <td>Disponible</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td class="course locked" data-code="U0677" data-prereq="U0077">U0677</td>
+                <td class="course locked" data-code="U0677" data-prereq="U0077">Física Básica</td>
+                <td>4</td>
+                <td>U0077</td>
+                <td>Presencial</td>
+                <td>Específico</td>
+                <td>Bloqueado</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td class="course locked" data-code="U0681" data-prereq="U0686">U0681</td>
+                <td class="course locked" data-code="U0681" data-prereq="U0686">Comunicación y Redacción II</td>
+                <td>3</td>
+                <td>U0686</td>
+                <td>No presencial</td>
+                <td>General</td>
+                <td>Bloqueado</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td class="course available" data-code="U0683" data-prereq="">U0683</td>
+                <td class="course available" data-code="U0683" data-prereq="">Cultura Ambiental y Desarrollo Sostenible</td>
+                <td>1</td>
+                <td>Ninguno</td>
+                <td>No presencial</td>
+                <td>General</td>
+                <td>Disponible</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td class="course available" data-code="U0687" data-prereq="">U0687</td>
+                <td class="course available" data-code="U0687" data-prereq="">Pensamiento Científico e Investigación</td>
+                <td>2</td>
+                <td>Ninguno</td>
+                <td>No presencial</td>
+                <td>Específico</td>
+                <td>Disponible</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td class="course available" data-code="U0688" data-prereq="">U0688</td>
+                <td class="course available" data-code="U0688" data-prereq="">Ciencias Sociales en el Contexto Actual</td>
+                <td>3</td>
+                <td>Ninguno</td>
+                <td>No presencial</td>
+                <td>General</td>
+                <td>Disponible</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td class="course locked" data-code="G0038" data-prereq="G0037">G0038</td>
+                <td class="course locked" data-code="G0038" data-prereq="G0037">Inglés 2</td>
+                <td>2</td>
+                <td>G0037</td>
+                <td>No presencial</td>
+                <td>General</td>
+                <td>Bloqueado</td>
+            </tr>
+            
+            <!-- Tercer Ciclo -->
+            <tr class="cycle-header">
+                <td colspan="8">Tercer Ciclo - 6 asignaturas | 20 créditos</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td class="course locked" data-code="T1622" data-prereq="U0673,U0105">T1622</td>
+                <td class="course locked" data-code="T1622" data-prereq="U0673,U0105">Fundamentos de Morfofisiología</td>
+                <td>8</td>
+                <td>U0673, U0105</td>
+                <td>Presencial</td>
+                <td>Específico</td>
+                <td>Bloqueado</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td class="course locked" data-code="T1710" data-prereq="U0681">T1710</td>
+                <td class="course locked" data-code="T1710" data-prereq="U0681">Lingüística y Fonética</td>
+                <td>2</td>
+                <td>U0681</td>
+                <td>No presencial</td>
+                <td>Especialidad</td>
+                <td>Bloqueado</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td class="course available" data-code="T0377" data-prereq="">T0377</td>
+                <td class="course available" data-code="T0377" data-prereq="">Actividad Complementaria I</td>
+                <td>1</td>
+                <td>Ninguno</td>
+                <td>Presencial</td>
+                <td>General</td>
+                <td>Disponible</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td class="course locked" data-code="G0039" data-prereq="G0038">G0039</td>
+                <td class="course locked" data-code="G0039" data-prereq="G0038">Inglés 3</td>
+                <td>2</td>
+                <td>G0038</td>
+                <td>No presencial</td>
+                <td>General</td>
+                <td>Bloqueado</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td class="course available" data-code="T1713" data-prereq="">T1713</td>
+                <td class="course available" data-code="T1713" data-prereq="">Asignatura Electiva I</td>
+                <td>2</td>
+                <td>Ninguno</td>
+                <td>Semipresencial</td>
+                <td>Específico</td>
+                <td>Disponible</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td class="course locked" data-code="T1835" data-prereq="T1622">T1835</td>
+                <td class="course locked" data-code="T1835" data-prereq="T1622">Farmacología</td>
+                <td>3</td>
+                <td>T1622</td>
+                <td>No presencial</td>
+                <td>Específico</td>
+                <td>Bloqueado</td>
+            </tr>
+            
+            <!-- Cuarto Ciclo -->
+            <tr class="cycle-header">
+                <td colspan="8">Cuarto Ciclo - 8 asignaturas | 23 créditos</td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td class="course locked" data-code="T1653" data-prereq="U0077">T1653</td>
+                <td class="course locked" data-code="T1653" data-prereq="U0077">Estadística</td>
+                <td>3</td>
+                <td>U0077</td>
+                <td>Semipresencial</td>
+                <td>Específico</td>
+                <td>Bloqueado</td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td class="course available" data-code="T1713" data-prereq="">T1713</td>
+                <td class="course available" data-code="T1713" data-prereq="">Asignatura Electiva I</td>
+                <td>2</td>
+                <td>Ninguno</td>
+                <td>Semipresencial</td>
+                <td>Específico</td>
+                <td>Disponible</td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td class="course locked" data-code="T1835" data-prereq="T1622">T1835</td>
+                <td class="course locked" data-code="T1835" data-prereq="T1622">Farmacología</td>
+                <td>3</td>
+                <td>T1622</td>
+                <td>No presencial</td>
+                <td>Específico</td>
+                <td>Bloqueado</td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td class="course locked" data-code="T0684" data-prereq="T1622">T0684</td>
+                <td class="course locked" data-code="T0684" data-prereq="T1622">Fisiopatología General</td>
+                <td>4</td>
+                <td>T1622</td>
+                <td>Presencial</td>
+                <td>Específico</td>
+                <td>Bloqueado</td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td class="course locked" data-code="T1836" data-prereq="T1622">T1836</td>
+                <td class="course locked" data-code="T1836" data-prereq="T1622">Anatomía del Aparato Fonoarticulador y de la Audición</td>
+                <td>5</td>
+                <td>T1622</td>
+                <td>Presencial</td>
+                <td>Especialidad</td>
+                <td>Bloqueado</td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td class="course locked" data-code="T1387" data-prereq="T1622">T1387</td>
+                <td class="course locked" data-code="T1387" data-prereq="T1622">Neurociencias en Rehabilitación</td>
+                <td>4</td>
+                <td>T1622</td>
+                <td>Presencial</td>
+                <td>Específico</td>
+                <td>Bloqueado</td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td class="course available" data-code="T0378" data-prereq="">T0378</td>
+                <td class="course available" data-code="T0378" data-prereq="">Actividad Complementaria II</td>
+                <td>1</td>
+                <td>Ninguno</td>
+                <td>Presencial</td>
+                <td>General</td>
+                <td>Disponible</td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td class="course locked" data-code="G0040" data-prereq="G0039">G0040</td>
+                <td class="course locked" data-code="G0040" data-prereq="G0039">Inglés 4</td>
+                <td>2</td>
+                <td>G0039</td>
+                <td>No presencial</td>
+                <td>General</td>
+                <td>Bloqueado</td>
+            </tr>
+            
+            <!-- Quinto Ciclo -->
+            <tr class="cycle-header">
+                <td colspan="8">Quinto Ciclo - 7 asignaturas | 20 créditos</td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td class="course locked" data-code="T1714" data-prereq="T1387">T1714</td>
+                <td class="course locked" data-code="T1714" data-prereq="T1387">Problemas de Aprendizaje en las Alteraciones del Lenguaje</td>
+                <td>5</td>
+                <td>T1387</td>
+                <td>Presencial</td>
+                <td>Especialidad</td>
+                <td>Bloqueado</td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td class="course locked" data-code="T1716" data-prereq="T1387">T1716</td>
+                <td class="course locked" data-code="T1716" data-prereq="T1387">Neurolingüística y Neuropsicología</td>
+                <td>3</td>
+                <td>T1387</td>
+                <td>Presencial</td>
+                <td>Especialidad</td>
+                <td>Bloqueado</td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td class="course available" data-code="T0919" data-prereq="">T0919</td>
+                <td class="course available" data-code="T0919" data-prereq="">Asignatura Electiva II</td>
+                <td>2</td>
+                <td>Ninguno</td>
+                <td>Presencial</td>
+                <td>Específico</td>
+                <td>Disponible</td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td class="course locked" data-code="T1837" data-prereq="T1387">T1837</td>
+                <td class="course locked" data-code="T1837" data-prereq="T1387">Neurodesarrollo e Intervención Temprana</td>
+                <td>4</td>
+                <td>T1387</td>
+                <td>Presencial</td>
+                <td>Específico</td>
+                <td>Bloqueado</td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td class="course available" data-code="T1838" data-prereq="">T1838</td>
+                <td class="course available" data-code="T1838" data-prereq="">Mental Health and Rehabilitation with an Inclusive Perspective</td>
+                <td>2</td>
+                <td>Ninguno</td>
+                <td>Semipresencial</td>
+                <td>Específico</td>
+                <td>Disponible</td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td class="course locked" data-code="T0887" data-prereq="T1836">T0887</td>
+                <td class="course locked" data-code="T0887" data-prereq="T1836">Patología de la Audición</td>
+                <td>3</td>
+                <td>T1836</td>
+                <td>Presencial</td>
+                <td>Especialidad</td>
+                <td>Bloqueado</td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td class="course available" data-code="T0379" data-prereq="">T0379</td>
+                <td class="course available" data-code="T0379" data-prereq="">Actividad Complementaria III</td>
+                <td>1</td>
+                <td>Ninguno</td>
+                <td>Presencial</td>
+                <td>General</td>
+                <td>Disponible</td>
+            </tr>
+            
+            <!-- Sexto Ciclo -->
+            <tr class="cycle-header">
+                <td colspan="8">Sexto Ciclo - 6 asignaturas | 20 créditos</td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td class="course locked" data-code="T1391" data-prereq="T1714,T1716">T1391</td>
+                <td class="course locked" data-code="T1391" data-prereq="T1714,T1716">Patología de Lenguaje y Habla en Niños</td>
+                <td>4</td>
+                <td>T1714, T1716</td>
+                <td>Presencial</td>
+                <td>Especialidad</td>
+                <td>Bloqueado</td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td class="course locked" data-code="T1392" data-prereq="T1836">T1392</td>
+                <td class="course locked" data-code="T1392" data-prereq="T1836">Patología de Voz</td>
+                <td>4</td>
+                <td>T1836</td>
+                <td>Presencial</td>
+                <td>Especialidad</td>
+                <td>Bloqueado</td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td class="course locked" data-code="T0655" data-prereq="T0887">T0655</td>
+                <td class="course locked" data-code="T0655" data-prereq="T0887">Audiología y Adaptación de Prótesis</td>
+                <td>3</td>
+                <td>T0887</td>
+                <td>Presencial</td>
+                <td>Especialidad</td>
+                <td>Bloqueado</td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td class="course locked" data-code="T1393" data-prereq="T1714,T1716,T1837">T1393</td>
+                <td class="course locked" data-code="T1393" data-prereq="T1714,T1716,T1837">Patología de Lenguaje y Habla en Adultos</td>
+                <td>4</td>
+                <td>T1714, T1716, T1837</td>
+                <td>Presencial</td>
+                <td>Especialidad</td>
+                <td>Bloqueado</td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td class="course locked" data-code="T0654" data-prereq="T1836">T0654</td>
+                <td class="course locked" data-code="T0654" data-prereq="T1836">Alteraciones de la Motricidad Orofacial</td>
+                <td>4</td>
+                <td>T1836</td>
+                <td>Presencial</td>
+                <td>Especialidad</td>
+                <td>Bloqueado</td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td class="course available" data-code="T0380" data-prereq="">T0380</td>
+                <td class="course available" data-code="T0380" data-prereq="">Actividad Complementaria IV</td>
+                <td>1</td>
+                <td>Ninguno</td>
+                <td>Presencial</td>
+                <td>General</td>
+                <td>Disponible</td>
+            </tr>
+            
+            <!-- Séptimo Ciclo -->
+            <tr class="cycle-header">
+                <td colspan="8">Séptimo Ciclo - 6 asignaturas | 20 créditos</td>
+            </tr>
+            <tr>
+                <td>7</td>
+                <td class="course locked" data-code="T0177" data-prereq="T1653">T0177</td>
+                <td class="course locked" data-code="T0177" data-prereq="T1653">Metodología de la Investigación</td>
+                <td>3</td>
+                <td>T1653</td>
+                <td>Presencial</td>
+                <td>Específico</td>
+                <td>Bloqueado</td>
+            </tr>
+            <tr>
+                <td>7</td>
+                <td class="course locked" data-code="T1659" data-prereq="U0688">T1659</td>
+                <td class="course locked" data-code="T1659" data-prereq="U0688">Ética y Deontología</td>
+                <td>2</td>
+                <td>U0688</td>
+                <td>No presencial</td>
+                <td>Específico</td>
+                <td>Bloqueado</td>
+            </tr>
+            <tr>
+                <td>7</td>
+                <td class="course locked" data-code="T0261" data-prereq="T1391">T0261</td>
+                <td class="course locked" data-code="T0261" data-prereq="T1391">Rehabilitación de Lenguaje en Niños</td>
+                <td>4</td>
+                <td>T1391</td>
+                <td>Presencial</td>
+                <td>Especialidad</td>
+                <td>Bloqueado</td>
+            </tr>
+            <tr>
+                <td>7</td>
+                <td class="course locked" data-code="T0610" data-prereq="T1392">T0610</td>
+                <td class="course locked" data-code="T0610" data-prereq="T1392">Rehabilitación de la Voz</td>
+                <td>3</td>
+                <td>T1392</td>
+                <td>Presencial</td>
+                <td>Especialidad</td>
+                <td>Bloqueado</td>
+            </tr>
+            <tr>
+                <td>7</td>
+                <td class="course locked" data-code="T0520" data-prereq="T1391">T0520</td>
+                <td class="course locked" data-code="T0520" data-prereq="T1391">Rehabilitación del Habla en Niños</td>
+                <td>4</td>
+                <td>T1391</td>
+                <td>Presencial</td>
+                <td>Especialidad</td>
+                <td>Bloqueado</td>
+            </tr>
+            <tr>
+                <td>7</td>
+                <td class="course locked" data-code="T1396" data-prereq="T0887">T1396</td>
+                <td class="course locked" data-code="T1396" data-prereq="T0887">Rehabilitación de la Discapacidad Auditiva</td>
+                <td>4</td>
+                <td>T0887</td>
+                <td>Semipresencial</td>
+                <td>Especialidad</td>
+                <td>Bloqueado</td>
+            </tr>
+            
+            <!-- Octavo Ciclo -->
+            <tr class="cycle-header">
+                <td colspan="8">Octavo Ciclo - 7 asignaturas | 21 créditos</td>
+            </tr>
+            <tr>
+                <td>8</td>
+                <td class="course locked" data-code="T1660" data-prereq="U0077">T1660</td>
+                <td class="course locked" data-code="T1660" data-prereq="U0077">Epidemiología y Salud Pública</td>
+                <td>2</td>
+                <td>U0077</td>
+                <td>No presencial</td>
+                <td>Específico</td>
+                <td>Bloqueado</td>
+            </tr>
+            <tr>
+                <td>8</td>
+                <td class="course locked" data-code="T1661" data-prereq="U0688">T1661</td>
+                <td class="course locked" data-code="T1661" data-prereq="U0688">Legislación en Salud</td>
+                <td>2</td>
+                <td>U0688</td>
+                <td>No presencial</td>
+                <td>Específico</td>
+                <td>Bloqueado</td>
+            </tr>
+            <tr>
+                <td>8</td>
+                <td class="course locked" data-code="T1662" data-prereq="T0177,T1653">T1662</td>
+                <td class="course locked" data-code="T1662" data-prereq="T0177,T1653">Taller de Diseño de Proyecto de Investigación</td>
+                <td>2</td>
+                <td>T0177, T1653</td>
+                <td>Presencial</td>
+                <td>Específico</td>
+                <td>Bloqueado</td>
+            </tr>
+            <tr>
+                <td>8</td>
+                <td class="course locked" data-code="T1655" data-prereq="T0177">T1655</td>
+                <td class="course locked" data-code="T1655" data-prereq="T0177">Gestión y Administración en Servicios de Salud</td>
+                <td>3</td>
+                <td>T0177</td>
+                <td>Semipresencial</td>
+                <td>Específico</td>
+                <td>Bloqueado</td>
+            </tr>
+            <tr>
+                <td>8</td>
+                <td class="course locked" data-code="T0656" data-prereq="T0654">T0656</td>
+                <td class="course locked" data-code="T0656" data-prereq="T0654">Rehabilitación de las Alteraciones de la Motricidad Orofacial</td>
+                <td>4</td>
+                <td>T0654</td>
+                <td>Presencial</td>
+                <td>Especialidad</td>
+                <td>Bloqueado</td>
+            </tr>
+            <tr>
+                <td>8</td>
+                <td class="course locked" data-code="T0676" data-prereq="T1393">T0676</td>
+                <td class="course locked" data-code="T0676" data-prereq="T1393">Rehabilitación del Lenguaje y Habla en Adultos</td>
+                <td>4</td>
+                <td>T1393</td>
+                <td>Presencial</td>
+                <td>Especialidad</td>
+                <td>Bloqueado</td>
+            </tr>
+            <tr>
+                <td>8</td>
+                <td class="course locked" data-code="T1839" data-prereq="T1393">T1839</td>
+                <td class="course locked" data-code="T1839" data-prereq="T1393">Atención Comunitaria</td>
+                <td>4</td>
+                <td>T1393</td>
+                <td>Presencial</td>
+                <td>Específico</td>
+                <td>Bloqueado</td>
+            </tr>
+            
+            <!-- Noveno Ciclo -->
+            <tr class="cycle-header">
+                <td colspan="8">Noveno Ciclo - 2 asignaturas | 22 créditos</td>
+            </tr>
+            <tr>
+                <td>9</td>
+                <td class="course locked" data-code="T1840" data-prereq="all">T1840</td>
+                <td class="course locked" data-code="T1840" data-prereq="all">Rotación I</td>
+                <td>11</td>
+                <td>Todas las asignaturas del 1ro al 4to año</td>
+                <td>Presencial</td>
+                <td>Específico</td>
+                <td>Bloqueado</td>
+            </tr>
+            <tr>
+                <td>9</td>
+                <td class="course locked" data-code="T1841" data-prereq="all">T1841</td>
+                <td class="course locked" data-code="T1841" data-prereq="all">Rotación II</td>
+                <td>11</td>
+                <td>Todas las asignaturas del 1ro al 4to año</td>
+                <td>Presencial</td>
+                <td>Específico</td>
+                <td>Bloqueado</td>
+            </tr>
+            
+            <!-- Décimo Ciclo -->
+            <tr class="cycle-header">
+                <td colspan="8">Décimo Ciclo - 3 asignaturas | 24 créditos</td>
+            </tr>
+            <tr>
+                <td>10</td>
+                <td class="course locked" data-code="T1357" data-prereq="T1662">T1357</td>
+                <td class="course locked" data-code="T1357" data-prereq="T1662">Trabajo de Investigación</td>
+                <td>2</td>
+                <td>T1662</td>
+                <td>Presencial</td>
+                <td>Específico</td>
+                <td>Bloqueado</td>
+            </tr>
+            <tr>
+                <td>10</td>
+                <td class="course locked" data-code="T1843" data-prereq="all">T1843</td>
+                <td class="course locked" data-code="T1843" data-prereq="all">Rotación III</td>
+                <td>11</td>
+                <td>Todas las asignaturas del 1ro al 4to año</td>
+                <td>Presencial</td>
+                <td>Especialidad</td>
+                <td>Bloqueado</td>
+            </tr>
+            <tr>
+                <td>10</td>
+                <td class="course locked" data-code="T1844" data-prereq="all">T1844</td>
+                <td class="course locked" data-code="T1844" data-prereq="all">Rotación IV</td>
+                <td>11</td>
+                <td>Todas las asignaturas del 1ro al 4to año</td>
+                <td>Presencial</td>
+                <td>Especialidad</td>
+                <td>Bloqueado</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const courses = document.querySelectorAll('.course');
+            let completedCourses = JSON.parse(localStorage.getItem('completedCourses')) || [];
+            
+            // Función para actualizar el progreso
+            function updateProgress() {
+                const totalCourses = document.querySelectorAll('.course:not(.cycle-header .course)').length / 2;
+                const progress = (completedCourses.length / totalCourses) * 100;
+                document.getElementById('progress').style.width = `${progress}%`;
+                document.getElementById('progress-text').textContent = `Progreso: ${Math.round(progress)}%`;
+                
+                // Guardar en localStorage
+                localStorage.setItem('completedCourses', JSON.stringify(completedCourses));
+            }
+            
+            // Función para desbloquear cursos
+            function unlockCourses() {
+                courses.forEach(course => {
+                    const code = course.getAttribute('data-code');
+                    const prereq = course.getAttribute('data-prereq');
+                    
+                    // Si ya está completado, no hacer nada
+                    if (completedCourses.includes(code)) {
+                        course.classList.remove('locked', 'available');
+                        course.classList.add('completed');
+                        course.closest('tr').querySelector('td:last-child').textContent = 'Completado';
+                        return;
+                    }
+                    
+                    // Si no tiene prerrequisitos o es "all" (caso especial)
+                    if (!prereq || prereq === "") {
+                        course.classList.remove('locked');
+                        course.classList.add('available');
+                        course.closest('tr').querySelector('td:last-child').textContent = 'Disponible';
+                    } 
+                    else if (prereq === "all") {
+                        // Caso especial para rotaciones que requieren todas las asignaturas
+                        const allCourses = Array.from(document.querySelectorAll('.course[data-code]'))
+                            .map(c => c.getAttribute('data-code'))
+                            .filter(c => c && !c.startsWith('T18')); // Excluir rotaciones
+                        
+                        const allCompleted = allCourses.every(c => completedCourses.includes(c));
+                        
+                        if (allCompleted) {
+                            course.classList.remove('locked');
+                            course.classList.add('available');
+                            course.closest('tr').querySelector('td:last-child').textContent = 'Disponible';
+                        } else {
+                            course.classList.remove('available');
+                            course.classList.add('locked');
+                            course.closest('tr').querySelector('td:last-child').textContent = 'Bloqueado';
+                        }
+                    }
+                    else {
+                        const prereqs = prereq.split(',');
+                        const allPrereqsMet = prereqs.every(req => completedCourses.includes(req.trim()));
+                        
+                        if (allPrereqsMet) {
+                            course.classList.remove('locked');
+                            course.classList.add('available');
+                            course.closest('tr').querySelector('td:last-child').textContent = 'Disponible';
+                        } else {
+                            course.classList.remove('available');
+                            course.classList.add('locked');
+                            course.closest('tr').querySelector('td:last-child').textContent = 'Bloqueado';
+                        }
+                    }
+                });
+            }
+            
+            // Evento click para marcar cursos como completados
+            courses.forEach(course => {
+                course.addEventListener('click', function() {
+                    if (this.classList.contains('locked')) return;
+                    
+                    const code = this.getAttribute('data-code');
+                    if (!completedCourses.includes(code)) {
+                        completedCourses.push(code);
+                        this.classList.add('completed');
+                        this.closest('tr').querySelector('td:last-child').textContent = 'Completado';
+                        
+                        // Marcar también la celda adyacente (nombre del curso)
+                        const adjacentCell = this.nextElementSibling || this.previousElementSibling;
+                        if (adjacentCell && adjacentCell.classList.contains('course')) {
+                            adjacentCell.classList.add('completed');
+                        }
+                        
+                        updateProgress();
+                        unlockCourses();
+                    }
+                });
+            });
+            
+            // Botones de control
+            document.getElementById('btn-show-all').addEventListener('click', function() {
+                document.querySelectorAll('tr').forEach(row => {
+                    row.style.display = '';
+                });
+            });
+            
+            document.getElementById('btn-show-available').addEventListener('click', function() {
+                document.querySelectorAll('tr').forEach(row => {
+                    const hasAvailable = Array.from(row.querySelectorAll('.course')).some(c => 
+                        c.classList.contains('available') && !c.classList.contains('completed')
+                    );
+                    row.style.display = hasAvailable || row.classList.contains('cycle-header') ? '' : 'none';
+                });
+            });
+            
+            document.getElementById('btn-show-completed').addEventListener('click', function() {
+                document.querySelectorAll('tr').forEach(row => {
+                    const hasCompleted = Array.from(row.querySelectorAll('.course')).some(c => 
+                        c.classList.contains('completed')
+                    );
+                    row.style.display = hasCompleted || row.classList.contains('cycle-header') ? '' : 'none';
+                });
+            });
+            
+            document.getElementById('btn-reset').addEventListener('click', function() {
+                if (confirm('¿Estás seguro de que deseas reiniciar todo tu progreso?')) {
+                    completedCourses = [];
+                    localStorage.removeItem('completedCourses');
+                    courses.forEach(course => {
+                        course.classList.remove('completed');
+                        if (course.getAttribute('data-prereq') && course.getAttribute('data-prereq') !== "") {
+                            course.classList.add('locked');
+                            course.classList.remove('available');
+                            course.closest('tr').querySelector('td:last-child').textContent = 'Bloqueado';
+                        } else {
+                            course.classList.add('available');
+                            course.classList.remove('locked');
+                            course.closest('tr').querySelector('td:last-child').textContent = 'Disponible';
+                        }
+                    });
+                    updateProgress();
+                }
+            });
+            
+            // Búsqueda
+            const searchBox = document.querySelector('.search-box');
+            searchBox.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                document.querySelectorAll('tbody tr').forEach(row => {
+                    if (row.classList.contains('cycle-header')) {
+                        row.style.display = '';
+                        return;
+                    }
+                    
+                    const text = row.textContent.toLowerCase();
+                    row.style.display = text.includes(searchTerm) ? '' : 'none';
+                });
+            });
+            
+            // Inicialización
+            completedCourses.forEach(code => {
+                const courseCells = document.querySelectorAll(`.course[data-code="${code}"]`);
+                courseCells.forEach(cell => {
+                    cell.classList.add('completed');
+                    cell.closest('tr').querySelector('td:last-child').textContent = 'Completado';
+                });
+            });
+            
+            unlockCourses();
+            updateProgress();
+        });
+    </script>
+</body>
+</html>
